@@ -1,32 +1,26 @@
-FROM openjdk:21-jdk-slim
+# Use Node.js as base image
+FROM node:20-alpine
 
-# Install required dependencies
-RUN apt-get update && apt-get install -y curl \
-    && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && curl -L https://www.npmjs.com/install.sh | npm_install="10.2.3" | sh
+# Set working directory
+WORKDIR /app
 
-WORKDIR /usr/src/app
+# Copy package.json and package-lock.json
+COPY frontend/package*.json ./
 
-# Copy everything first
-COPY . .
+# Install dependencies
+RUN npm install
 
-# Ensure mvnw is executable before removing frontend
-RUN chmod +x mvnw
-RUN sed -i 's/\r$//' mvnw
+# Copy the rest of the frontend code
+COPY frontend/ ./
 
-# Build the frontend
-RUN cd frontend && npm install
-RUN cd frontend && npm run build
+# Build the app
+RUN npm run build
 
-# Remove frontend (ONLY if mvnw is not inside it)
-RUN rm -r frontend
+# Install a simple HTTP server to serve static content
+RUN npm install -g serve
 
-# Build the Java application
-RUN ./mvnw package
+# Expose the port
+EXPOSE 80
 
-# Expose the application port
-EXPOSE 8080
-
-# Start the application
-CMD ["java", "-jar", "/usr/src/app/target/golf-tracker.jar"]
+# Start the server
+CMD ["serve", "-s", "dist", "-l", "80"]
