@@ -135,9 +135,7 @@ const TrackRound = () => {
             >
               <option value="">Select club</option>
               <option value="Driver">Driver</option>
-              <option value="3 Wood">3 Wood</option>
               <option value="5 Wood">5 Wood</option>
-              <option value="Hybrid">Hybrid</option>
               <option value="3 Iron">3 Iron</option>
               <option value="4 Iron">4 Iron</option>
               <option value="5 Iron">5 Iron</option>
@@ -145,6 +143,10 @@ const TrackRound = () => {
               <option value="7 Iron">7 Iron</option>
               <option value="8 Iron">8 Iron</option>
               <option value="9 Iron">9 Iron</option>
+              <option value="PW">PW</option>
+              <option value="52">52</option>
+              <option value="56">56</option>
+              <option value="58">58</option>
             </select>
           </div>
         </div>
@@ -193,9 +195,7 @@ const TrackRound = () => {
                     onChange={(e) => handleInputChange('approachClub', e.target.value)}
                   >
                     <option value="">Select club</option>
-                    <option value="3 Wood">3 Wood</option>
                     <option value="5 Wood">5 Wood</option>
-                    <option value="Hybrid">Hybrid</option>
                     <option value="3 Iron">3 Iron</option>
                     <option value="4 Iron">4 Iron</option>
                     <option value="5 Iron">5 Iron</option>
@@ -204,9 +204,9 @@ const TrackRound = () => {
                     <option value="8 Iron">8 Iron</option>
                     <option value="9 Iron">9 Iron</option>
                     <option value="PW">PW</option>
-                    <option value="GW">GW</option>
-                    <option value="SW">SW</option>
-                    <option value="LW">LW</option>
+                    <option value="52">52</option>
+                    <option value="56">56</option>
+                    <option value="58">58</option>
                   </select>
                 </div>
                 

@@ -9,6 +9,8 @@ import DataManager from '../components/common/DataManager';
 const Home = () => {
   const navigate = useNavigate();
   const [rounds, setRounds] = useState([]);
+  // Track the current/most recent round ID
+  const [currentRoundId, setCurrentRoundId] = useState(null);
   const [stats, setStats] = useState({
     fairwayHitPercentage: 0,
     girPercentage: 0,
@@ -29,9 +31,12 @@ const Home = () => {
   const handleStartNewRound = () => {
     // Create a new round
     const newRound = createRound({
-      courseName: 'My Golf Course', // Default name or you could add a prompt for course name
+      courseName: 'My Golf Course',
       date: new Date().toISOString()
     });
+    
+    // Update current round ID
+    setCurrentRoundId(newRound.id);
     
     // Navigate to track the round - starting with hole 1
     navigate(`/track/${newRound.id}/1`);
@@ -53,7 +58,10 @@ const Home = () => {
           Start New Round
         </button>
       </div>
-      
+      <div className="data-management">
+          <DataManager currentRoundId={currentRoundId} />
+      </div>
+
       <div className="stats-summary">
         <h2>Overall Statistics</h2>
         <div className="stats-grid">
@@ -82,10 +90,9 @@ const Home = () => {
             value={`${stats.sandSavePercentage.toFixed(1)}%`} 
             icon="🏖️" 
           />
+          
         </div>
-        <div className="data-management">
-          <DataManager currentRoundId={currentRoundId} />
-        </div>
+        
       </div>
       
       <div className="recent-rounds">
