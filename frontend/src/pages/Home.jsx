@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getRounds, createRound } from '../utils/localStorage';
 import { calculateOverallStats } from '../utils/statCalculations';
 import StatCard from '../components/stats/StatCard.jsx';
+import DataManager from '../components/common/DataManager';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -81,6 +82,9 @@ const Home = () => {
             value={`${stats.sandSavePercentage.toFixed(1)}%`} 
             icon="🏖️" 
           />
+        </div>
+        <div className="data-management">
+          <DataManager currentRoundId={currentRoundId} />
         </div>
       </div>
       
