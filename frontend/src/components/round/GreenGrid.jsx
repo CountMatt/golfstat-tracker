@@ -17,7 +17,7 @@ const GreenGrid = ({ selected, onChange }) => {
                 onClick={() => onChange(position)}
                 aria-label={position.replace('-', ' ')}
               >
-                {position === 'center' ? 'Hit' : ''}
+                {position === 'center' ? 'GIR ✓' : ''}
               </button>
             ))}
           </div>

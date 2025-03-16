@@ -27,7 +27,7 @@ export const calculateOverallStats = (rounds) => {
         totalHoles++;
         
         // Fairway hit stats
-        if (hole.fairwayHit !== undefined) {
+        if (hole.fairwayHit !== undefined && hole.par > 3) {
           fairwaysPlayed++;
           if (hole.fairwayHit === 'hit') {
             fairwaysHit++;
@@ -98,7 +98,7 @@ export const calculateOverallStats = (rounds) => {
   
     round.holes.forEach(hole => {
       // Fairway hit stats
-      if (hole.fairwayHit !== undefined) {
+      if (hole.fairwayHit !== undefined && hole.par > 3) {
         fairwaysPlayed++;
         if (hole.fairwayHit === 'hit') {
           fairwaysHit++;

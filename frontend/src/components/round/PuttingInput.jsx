@@ -10,6 +10,7 @@ const PuttingInput = ({ firstPuttDistance, firstPuttRemaining, totalPutts, onCha
             onChange={(e) => onChange('firstPuttDistance', Number(e.target.value))}
             min="0"
             step="0.1"
+            inputmode="numeric"
           />
         </div>
         
@@ -21,6 +22,7 @@ const PuttingInput = ({ firstPuttDistance, firstPuttRemaining, totalPutts, onCha
             onChange={(e) => onChange('firstPuttRemaining', Number(e.target.value))}
             min="0"
             step="0.1"
+            inputmode="numeric"
             />
         </div>
       

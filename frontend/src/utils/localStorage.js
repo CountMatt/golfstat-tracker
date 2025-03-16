@@ -147,8 +147,18 @@ export const importData = async (file) => {
     
     reader.onload = (event) => {
       try {
-        const data = JSON.parse(event.target.result);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        const importedData = JSON.parse(event.target.result);
+        const currentData = getStorageData();
+        
+        // Merge the rounds instead of replacing them
+        const existingIds = currentData.rounds.map(round => round.id);
+        const newRounds = importedData.rounds.filter(round => !existingIds.includes(round.id));
+        
+        // Add only new rounds to the existing data
+        currentData.rounds = [...currentData.rounds, ...newRounds];
+        
+        // Save the merged data
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
         resolve(true);
       } catch (error) {
         reject(new Error('Invalid file format'));

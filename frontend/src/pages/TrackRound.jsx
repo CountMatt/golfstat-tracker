@@ -120,21 +120,22 @@ const TrackRound = () => {
         </div>
         
         {/* Fairway Section */}
-        <div className="input-section">
-          <h3>Fairway</h3>
-          <FairwaySelector
-            selected={holeData.fairwayHit}
-            onChange={(value) => handleInputChange('fairwayHit', value)}
-          />
-          
-          <div className="club-input">
-            <label>Club used off tee:</label>
-            <select
-              value={holeData.teeClub || ''}
-              onChange={(e) => handleInputChange('teeClub', e.target.value)}
-            >
-              <option value="">Select club</option>
-              <option value="Driver">Driver</option>
+        {holeData.par > 3 && (
+  <div className="input-section">
+    <h3>Fairway</h3>
+    <FairwaySelector
+      selected={holeData.fairwayHit}
+      onChange={(value) => handleInputChange('fairwayHit', value)}
+    />
+    
+    <div className="club-input">
+      <label>Club used off tee:</label>
+      <select
+        value={holeData.teeClub || ''}
+        onChange={(e) => handleInputChange('teeClub', e.target.value)}
+      >
+        <option value="">Select club</option>
+        <option value="Driver">Driver</option>
               <option value="5 Wood">5 Wood</option>
               <option value="3 Iron">3 Iron</option>
               <option value="4 Iron">4 Iron</option>
@@ -147,106 +148,102 @@ const TrackRound = () => {
               <option value="52">52</option>
               <option value="56">56</option>
               <option value="58">58</option>
-            </select>
-          </div>
-        </div>
+        {/* ...other club options... */}
+      </select>
+    </div>
+  </div>
+)}
+
         
         {/* Green Section */}
         <div className="input-section">
-          <h3>Green in Regulation</h3>
-          <div className="gir-selector">
-            <button
-              className={`gir-btn ${holeData.girHit ? 'selected' : ''}`}
-              onClick={() => handleInputChange('girHit', true)}
-            >
-              Hit
-            </button>
-            <button
-              className={`gir-btn ${holeData.girHit === false ? 'selected' : ''}`}
-              onClick={() => handleInputChange('girHit', false)}
-            >
-              Missed
-            </button>
-          </div>
-          
-          {holeData.girHit === false && (
-            <>
-              <h4>Green Miss Location</h4>
-              <GreenGrid
-                selected={holeData.greenPosition}
-                onChange={(value) => handleInputChange('greenPosition', value)}
-              />
-              
-              <div className="approach-inputs">
-                <div>
-                  <label>Approach Distance (meters):</label>
-                  <input
-                    type="number"
-                    value={holeData.approachDistance || ''}
-                    onChange={(e) => handleInputChange('approachDistance', Number(e.target.value))}
-                    min="0"
-                  />
-                </div>
-                
-                <div>
-                  <label>Club Used:</label>
-                  <select
-                    value={holeData.approachClub || ''}
-                    onChange={(e) => handleInputChange('approachClub', e.target.value)}
-                  >
-                    <option value="">Select club</option>
-                    <option value="5 Wood">5 Wood</option>
-                    <option value="3 Iron">3 Iron</option>
-                    <option value="4 Iron">4 Iron</option>
-                    <option value="5 Iron">5 Iron</option>
-                    <option value="6 Iron">6 Iron</option>
-                    <option value="7 Iron">7 Iron</option>
-                    <option value="8 Iron">8 Iron</option>
-                    <option value="9 Iron">9 Iron</option>
-                    <option value="PW">PW</option>
-                    <option value="52">52</option>
-                    <option value="56">56</option>
-                    <option value="58">58</option>
-                  </select>
-                </div>
-                
-                <div className="sand-shot">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={holeData.fromSand || false}
-                      onChange={(e) => handleInputChange('fromSand', e.target.checked)}
-                    />
-                    From bunker
-                  </label>
-                </div>
-                
-                <div className="up-and-down">
-                  <label>Up & Down:</label>
-                  <div className="up-down-btns">
-                    <button
-                      className={holeData.upAndDownSuccess ? 'selected' : ''}
-                      onClick={() => {
-                        handleInputChange('upAndDownAttempt', true);
-                        handleInputChange('upAndDownSuccess', true);
-                      }}
-                    >
-                      Yes
-                    </button>
-                    <button
-                      className={holeData.upAndDownAttempt && !holeData.upAndDownSuccess ? 'selected' : ''}
-                      onClick={() => {
-                        handleInputChange('upAndDownAttempt', true);
-                        handleInputChange('upAndDownSuccess', false);
-                      }}
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+        <h3>Green Location</h3>
+<GreenGrid
+  selected={holeData.greenPosition}
+  onChange={(value) => {
+    // If center is selected, mark GIR as hit
+    const girHit = value === 'center';
+    handleInputChange('greenPosition', value);
+    handleInputChange('girHit', girHit);
+  }}
+/>
+
+{holeData.greenPosition !== 'center' && holeData.greenPosition !== null && (
+  // This section only shows if the green is missed
+  <div className="approach-inputs">
+    <div>
+      <label>Approach Distance (meters):</label>
+      <input
+        type="number"
+        value={holeData.approachDistance || ''}
+        onChange={(e) => handleInputChange('approachDistance', Number(e.target.value))}
+        min="0"
+        inputMode="numeric"
+      />
+    </div>
+    
+    <div>
+      <label>Club Used:</label>
+      <select
+        value={holeData.approachClub || ''}
+        onChange={(e) => handleInputChange('approachClub', e.target.value)}
+      >
+        <option value="">Select club</option>
+        <option value="3 Wood">3 Wood</option>
+        <option value="5 Wood">5 Wood</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="3 Iron">3 Iron</option>
+        <option value="4 Iron">4 Iron</option>
+        <option value="5 Iron">5 Iron</option>
+        <option value="6 Iron">6 Iron</option>
+        <option value="7 Iron">7 Iron</option>
+        <option value="8 Iron">8 Iron</option>
+        <option value="9 Iron">9 Iron</option>
+        <option value="PW">PW</option>
+        <option value="GW">GW</option>
+        <option value="SW">SW</option>
+        <option value="LW">LW</option>
+      </select>
+    </div>
+    
+    <div className="sand-shot">
+      <label>
+        <input
+          type="checkbox"
+          checked={holeData.fromSand || false}
+          onChange={(e) => handleInputChange('fromSand', e.target.checked)}
+        />
+        From bunker
+      </label>
+    </div>
+    
+    <div className="up-and-down">
+      <label>Up & Down:</label>
+      <div className="up-down-btns">
+        <button
+          type="button"
+          className={holeData.upAndDownSuccess ? 'selected' : ''}
+          onClick={() => {
+            handleInputChange('upAndDownAttempt', true);
+            handleInputChange('upAndDownSuccess', true);
+          }}
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          className={holeData.upAndDownAttempt && !holeData.upAndDownSuccess ? 'selected' : ''}
+          onClick={() => {
+            handleInputChange('upAndDownAttempt', true);
+            handleInputChange('upAndDownSuccess', false);
+          }}
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         </div>
         
         {/* Putting Section */}
@@ -275,6 +272,7 @@ const TrackRound = () => {
               value={holeData.score || ''}
               onChange={(e) => handleInputChange('score', Number(e.target.value))}
               min="1"
+              inputmode="numeric"
             />
             <button 
               className="score-btn increase"
