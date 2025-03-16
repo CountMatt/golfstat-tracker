@@ -1,0 +1,494 @@
+/* Add to or replace in index.css */
+
+:root {
+  --primary-color: #2E7D32;
+  --primary-light: #4CAF50;
+  --primary-dark: #1B5E20;
+  --secondary-color: #8BC34A;
+  --background-color: #FFFFFF;
+  --light-background: #F5F5F5;
+  --text-color: #333333;
+  --light-text: #757575;
+  --border-color: #E0E0E0;
+  --danger-color: #D32F2F;
+  --success-color: #388E3C;
+  --warning-color: #FFA000;
+  --info-color: #1976D2;
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+h1, h2, h3, h4 {
+  margin-bottom: 1rem;
+}
+
+/* Header and Footer */
+.header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.footer {
+  background-color: var(--light-background);
+  padding: 1rem;
+  text-align: center;
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+  background-color: #b71c1c;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* Home Page */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.stats-summary, .recent-rounds {
+  margin-bottom: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.stat-title {
+  color: var(--light-text);
+  font-size: 0.9rem;
+}
+
+.rounds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.round-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.round-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.round-date {
+  color: var(--light-text);
+  font-size: 0.9rem;
+}
+
+.round-stats {
+  margin-bottom: 1.5rem;
+}
+
+.round-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Track Round Page */
+.track-round-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.track-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.hole-input-grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.input-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.par-selector, .gir-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.par-btn, .gir-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: var(--light-background);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.par-btn.selected, .gir-btn.selected {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.green-grid {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  width: 210px;
+  height: 210px;
+  margin: 0 auto 1.5rem auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+}
+
+.green-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: 100%;
+}
+
+.green-section {
+  border: 1px solid var(--border-color);
+  background-color: var(--light-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.green-section.center {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.green-section.selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.fairway-selector {
+  display: flex;
+  height: 50px;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fairway-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-background);
+  border: none;
+  font-size: 0.9rem;
+}
+
+.fairway-section.hit {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.fairway-section.selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.approach-inputs, .putting-inputs {
+  display: grid;
+  gap: 1rem;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-row label {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+input[type="number"], select {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.up-down-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.up-down-btns button {
+  flex: 1;
+  padding: 0.5rem;
+  background-color: var(--light-background);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.up-down-btns button.selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.putt-counter {
+  display: flex;
+  align-items: center;
+  max-width: 200px;
+}
+
+.putt-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  background-color: var(--light-background);
+  border-radius: 4px;
+  font-size: 1.2rem;
+}
+
+.putt-count {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.score-input {
+  display: flex;
+  align-items: center;
+  max-width: 200px;
+  margin-bottom: 1rem;
+}
+
+.score-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  background-color: var(--light-background);
+  border-radius: 4px;
+  font-size: 1.2rem;
+}
+
+.score-input input {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.score-relative {
+  font-weight: bold;
+  text-align: center;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* View Round Page */
+.view-round-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.round-stats-summary {
+  margin-bottom: 2rem;
+}
+
+.scorecard {
+  margin-bottom: 2rem;
+}
+
+.scorecard-table {
+  overflow-x: auto;
+}
+
+.scorecard-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.scorecard-table th, .scorecard-table td {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+}
+
+.scorecard-table th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.scorecard-table tr:nth-child(even) {
+  background-color: var(--light-background);
+}
+
+.under-par {
+  color: var(--success-color);
+  font-weight: bold;
+}
+
+.over-par {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+.par {
+  color: var(--text-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-header, .round-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .round-actions {
+    width: 100%;
+  }
+  
+  .hole-input-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .navigation-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 768px) {
+  .hole-input-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
