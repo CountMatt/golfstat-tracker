@@ -1,27 +1,27 @@
 // src/components/round/FairwaySelector.jsx
 const FairwaySelector = ({ selected, onChange }) => {
-    return (
-      <div className="fairway-selector">
-        <button 
-          className={`fairway-section left ${selected === 'left' ? 'selected' : ''}`}
-          onClick={() => onChange('left')}
-        >
-          Left
-        </button>
-        <button 
-          className={`fairway-section hit ${selected === 'hit' ? 'selected' : ''}`}
-          onClick={() => onChange('hit')}
-        >
-          Hit
-        </button>
-        <button 
-          className={`fairway-section right ${selected === 'right' ? 'selected' : ''}`}
-          onClick={() => onChange('right')}
-        >
-          Right
-        </button>
-      </div>
-    );
-  };
-  
-  export default FairwaySelector;
+  return (
+    <div className="button-row">
+      <button 
+        className={`option-btn ${selected === 'left' ? 'selected' : ''}`}
+        onClick={() => onChange('left')}
+      >
+        Miss Left
+      </button>
+      <button 
+        className={`option-btn ${selected === 'hit' ? 'selected' : ''}`}
+        onClick={() => onChange('hit')}
+      >
+        Hit
+      </button>
+      <button 
+        className={`option-btn ${selected === 'right' ? 'selected' : ''}`}
+        onClick={() => onChange('right')}
+      >
+        Miss Right
+      </button>
+    </div>
+  );
+};
+
+export default FairwaySelector;
