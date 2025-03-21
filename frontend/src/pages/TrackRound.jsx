@@ -14,11 +14,15 @@ const TrackRound = () => {
   const [holeData, setHoleData] = useState({
     number: currentHole,
     par: 4, // Default par
-    score: 0,
+    score: 4, // Default to par
     fairwayHit: null, // 'hit', 'left', 'right'
+    teeClub: '', // Club used off the tee
     girHit: false,
     greenPosition: null,
-    putts: 0
+    approachDistance: 0,
+    approachClub: '',
+    firstPuttDistance: 0,
+    putts: 2
   });
 
   useEffect(() => {
@@ -142,47 +146,108 @@ const TrackRound = () => {
         </div>
       </div>
       
-      {/* Only show fairway for Par 4 and 5 */}
       {holeData.par > 3 && (
-        <div className="option-group">
-          <div className="option-title">FAIRWAY</div>
-          <FairwaySelector
-            selected={holeData.fairwayHit}
-            onChange={(value) => handleInputChange('fairwayHit', value)}
-          />
-        </div>
-      )}
+  <div className="option-group">
+    <div className="option-title">FAIRWAY & TEE CLUB</div>
+    <FairwaySelector
+      selected={holeData.fairwayHit}
+      onChange={(value) => handleInputChange('fairwayHit', value)}
+      teeClub={holeData.teeClub}
+      onClubChange={(value) => handleInputChange('teeClub', value)}
+    />
+  </div>
+)}
       
-      <div className="option-group">
-        <div className="option-title">GREEN IN REGULATION</div>
-        <GreenGrid
-          selected={holeData.greenPosition}
-          onChange={(value) => handleInputChange('greenPosition', value)}
-          hideText={true} // New prop to hide section text
+
+
+
+<div className="option-group approach-section">
+  <div className="option-title">GREEN IN REGULATION</div>
+  <div className="gir-approach-container">
+    <div className="approach-inputs">
+      <div className="input-row">
+        <label>Approach (m):</label>
+        <input
+          type="number"
+          value={holeData.approachDistance || ''}
+          onChange={(e) => handleInputChange('approachDistance', Number(e.target.value))}
+          min="0"
+          inputMode="numeric"
+          className="compact-input"
         />
       </div>
+      <div className="input-row">
+        <label>Club:</label>
+        <select
+          value={holeData.approachClub || ''}
+          onChange={(e) => handleInputChange('approachClub', e.target.value)}
+          className="compact-input"
+        >
+          <option value="">Club</option>
+          <option value="7 Wood">7W</option>
+          <option value="4 Iron">4i</option>
+          <option value="5 Iron">5i</option>
+          <option value="6 Iron">6i</option>
+          <option value="7 Iron">7i</option>
+          <option value="8 Iron">8i</option>
+          <option value="9 Iron">9i</option>
+          <option value="PW">PW</option>
+          <option value="50">50</option>
+          <option value="54">54</option>
+          <option value="58">58</option>
+        </select>
+      </div>
+    </div>
+    <GreenGrid
+      selected={holeData.greenPosition}
+      onChange={(value) => handleInputChange('greenPosition', value)}
+      hideText={true}
+    />
+  </div>
+</div>
+
+      
       
       <div className="option-group">
-        <div className="option-title">PUTTS</div>
-        <div className="button-row">
-          <button 
-            className={`option-btn ${holeData.putts === 1 ? 'selected' : ''}`}
-            onClick={() => handleInputChange('putts', 1)}
-          >1</button>
-          <button 
-            className={`option-btn ${holeData.putts === 2 ? 'selected' : ''}`}
-            onClick={() => handleInputChange('putts', 2)}
-          >2</button>
-          <button 
-            className={`option-btn ${holeData.putts === 3 ? 'selected' : ''}`}
-            onClick={() => handleInputChange('putts', 3)}
-          >3</button>
-          <button 
-            className={`option-btn ${holeData.putts === 4 ? 'selected' : ''}`}
-            onClick={() => handleInputChange('putts', 4)}
-          >4+</button>
-        </div>
+  <div className="option-title">PUTTING</div>
+  <div className="putting-container">
+    <div className="putting-inputs">
+      <div>
+        <label>First putt (m):</label>
+        <input
+          type="number"
+          value={holeData.firstPuttDistance || ''}
+          onChange={(e) => handleInputChange('firstPuttDistance', Number(e.target.value))}
+          min="0"
+          step="0.1"
+          inputMode="numeric"
+          className="compact-input"
+        />
       </div>
+    </div>
+    <div className="putts-counter">
+      <label>Total putts:</label>
+      <div className="button-row">
+        <button 
+          className={`option-btn ${holeData.putts === 1 ? 'selected' : ''}`}
+          onClick={() => handleInputChange('putts', 1)}
+        >1</button>
+        <button 
+          className={`option-btn ${holeData.putts === 2 ? 'selected' : ''}`}
+          onClick={() => handleInputChange('putts', 2)}
+        >2</button>
+        <button 
+          className={`option-btn ${holeData.putts === 3 ? 'selected' : ''}`}
+          onClick={() => handleInputChange('putts', 3)}
+        >3</button>
+        <button 
+          className={`option-btn ${holeData.putts === 4 ? 'selected' : ''}`}
+          onClick={() => handleInputChange('putts', 4)}
+        >4+</button>
+      </div>
+    </div>
+  </div>
+</div>
       
       <div className="option-group">
         <div className="option-title">SCORE</div>

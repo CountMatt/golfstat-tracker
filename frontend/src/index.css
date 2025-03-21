@@ -317,13 +317,25 @@ h1, h2, h3, h4 {
 }
 
 .green-section.center {
+  /* Only apply the green background when selected */
+  background-color: var(--light-background); 
+  color: var(--text-color);
+}
+
+.green-section.center.selected {
   background-color: var(--secondary-color);
   color: white;
 }
 
+/* All selected sections should have the primary color */
 .green-section.selected {
   background-color: var(--primary-color);
   color: white;
+}
+
+/* But center should use secondary color when selected */
+.green-section.center.selected {
+  background-color: var(--secondary-color);
 }
 
 .fairway-selector {
@@ -616,4 +628,195 @@ input[type="number"], select {
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 15px;
   margin-bottom: 20px;
+}
+/* Add these styles to your index.css */
+
+/* More compact header */
+.header {
+  padding: 8px;
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}
+
+/* More compact track header */
+.track-header {
+  margin-bottom: 12px;
+}
+
+.track-header h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+/* More compact option groups */
+.option-group {
+  margin-bottom: 15px;
+}
+
+.option-title {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+/* Smaller buttons */
+.option-btn {
+  padding: 8px 6px;
+  font-size: 0.9rem;
+  min-width: 50px;
+}
+
+.button-row {
+  gap: 5px;
+}
+
+/* Smaller green grid */
+.green-grid {
+  width: 180px;
+  height: 180px;
+}
+
+/* Smaller save button */
+.save-btn {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+/* Adjust spacing for all content */
+.content {
+  padding: 12px;
+}
+
+/* More compact form elements */
+input[type="number"], select {
+  padding: 6px;
+  font-size: 0.9rem;
+}
+
+.input-row label {
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+}
+
+/* Add to your CSS */
+.gir-approach-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.approach-inputs {
+  flex: 1;
+  max-width: 100px;
+}
+
+.compact-input {
+  width: 100%;
+  padding: 5px;
+  font-size: 0.8rem;
+}
+
+.approach-section {
+  margin-bottom: 20px;
+}
+/* Add to your CSS */
+.putting-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.putting-inputs {
+  flex: 1;
+  max-width: 100px;
+}
+
+.putts-counter {
+  flex: 2;
+}
+
+.putts-counter label {
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+  display: block;
+}
+
+/* Add to your CSS */
+.fairway-tee-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fairway-section {
+  flex: 3;
+}
+
+.tee-club-section {
+  flex: 1;
+  min-width: 90px;
+}
+
+.tee-club-select {
+  width: 100%;
+  padding: 7px 5px;
+  font-size: 0.9rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: white;
+}
+
+/* Make fairway buttons a bit more compact */
+.fairway-section .button-row .option-btn {
+  padding: 8px 4px;
+  font-size: 0.85rem;
+}
+
+/* Fairway and tee club selector styling */
+.fairway-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fairway-row {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.fairway-btn {
+  flex: 1;
+  padding: 10px 5px;
+  font-size: 0.9rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.fairway-btn.selected {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.fairway-btn.selected.hit {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.tee-club-row {
+  width: 100%;
+}
+
+.tee-club-select {
+  width: 100%;
+  padding: 10px 5px;
+  font-size: 0.9rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background-color: white;
 }
