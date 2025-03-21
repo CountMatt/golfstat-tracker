@@ -40,12 +40,14 @@ export const getRound = (roundId) => {
   return rounds.find(round => round.id === roundId);
 };
 
+
 // Create new round
 export const createRound = (roundData) => {
   const data = getStorageData();
   const newRound = {
     id: Date.now().toString(), // Simple ID generation
     date: new Date().toISOString(),
+    holeCount: 18, // Default to 18 holes
     ...roundData,
     holes: []
   };

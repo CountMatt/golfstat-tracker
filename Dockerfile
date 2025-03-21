@@ -1,5 +1,5 @@
-# Use Node.js as base image
-FROM node:20-alpine
+# Build stage
+FROM node:20-alpine as build
 
 # Set working directory
 WORKDIR /app
@@ -16,11 +16,17 @@ COPY frontend/ ./
 # Build the app
 RUN npm run build
 
-# Install a simple HTTP server to serve static content
-RUN npm install -g serve
+# Production stage with Nginx
+FROM nginx:alpine
 
-# Expose the port
+# Copy built files from build stage
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy nginx configuration (create this file)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
 EXPOSE 80
 
-# Start the server
-CMD ["serve", "-s", "dist", "-l", "80"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
