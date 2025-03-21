@@ -1,5 +1,4 @@
-/* Add to or replace in index.css */
-
+/* ===== VARIABLES ===== */
 :root {
   --primary-color: #2E7D32;
   --primary-light: #4CAF50;
@@ -16,7 +15,7 @@
   --info-color: #1976D2;
 }
 
-/* Global Styles */
+/* ===== GLOBAL STYLES ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -30,6 +29,7 @@ body {
   line-height: 1.6;
 }
 
+/* ===== LAYOUT ===== */
 .app {
   display: flex;
   flex-direction: column;
@@ -44,48 +44,17 @@ body {
   width: 100%;
 }
 
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4 {
+  margin-bottom: 0.75rem;
+}
+
 a {
   text-decoration: none;
   color: var(--primary-color);
 }
 
-button {
-  cursor: pointer;
-  font-family: inherit;
-}
-
-h1, h2, h3, h4 {
-  margin-bottom: 1rem;
-}
-
-/* Header and Footer */
-.header {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 1rem;
-}
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
-}
-
-.footer {
-  background-color: var(--light-background);
-  padding: 1rem;
-  text-align: center;
-  margin-top: auto;
-  border-top: 1px solid var(--border-color);
-}
+/* ===== COMMON COMPONENTS ===== */
 
 /* Buttons */
 .btn {
@@ -97,6 +66,7 @@ h1, h2, h3, h4 {
   border-radius: 4px;
   font-size: 1rem;
   transition: background-color 0.3s;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -118,45 +88,91 @@ h1, h2, h3, h4 {
   background-color: var(--danger-color);
 }
 
-.btn-danger:hover {
-  background-color: #b71c1c;
-}
-
 .btn-block {
   display: block;
   width: 100%;
 }
 
-/* Home Page */
+/* Form elements */
+input[type="number"], 
+input[type="text"],
+select {
+  padding: 0.6rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* ===== HEADER & FOOTER ===== */
+.header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.8rem;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.footer {
+  background-color: var(--light-background);
+  padding: 0.8rem;
+  text-align: center;
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ===== HOME PAGE ===== */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.stats-summary, .recent-rounds {
-  margin-bottom: 2rem;
+.home-actions {
+  margin: 1.5rem 0;
 }
 
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-group .btn {
+  flex: 1;
+}
+
+/* Stats cards */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .stat-card {
   background-color: white;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1.2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
 }
 
 .stat-icon {
-  font-size: 2rem;
-  margin-right: 1rem;
+  font-size: 1.8rem;
+  margin-right: 0.8rem;
 }
 
 .stat-content {
@@ -164,26 +180,27 @@ h1, h2, h3, h4 {
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: var(--primary-color);
 }
 
 .stat-title {
   color: var(--light-text);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
+/* Rounds */
 .rounds-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1rem;
 }
 
 .round-card {
   background-color: white;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1.2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -192,37 +209,32 @@ h1, h2, h3, h4 {
 .round-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.round-date {
-  color: var(--light-text);
-  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
 }
 
 .round-stats {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .round-actions {
+  margin-top: auto;
   display: flex;
   gap: 0.5rem;
 }
 
-/* Data Management */
+/* ===== DATA MANAGEMENT ===== */
 .data-manager {
   background-color: white;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1.2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .data-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .message {
@@ -243,61 +255,127 @@ h1, h2, h3, h4 {
   border: 1px solid #FFCDD2;
 }
 
-/* Track Round Page */
+/* ===== TRACKING PAGE ===== */
 .track-round-container {
   max-width: 800px;
   margin: 0 auto;
 }
 
 .track-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.hole-input-grid {
-  display: grid;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  grid-template-rows: auto; /* Allow rows to size naturally */
-}
-
-.input-section {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.par-selector, .gir-selector {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.par-btn, .gir-btn {
-  flex: 1;
-  padding: 0.75rem;
-  background-color: var(--light-background);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 1rem;
+.track-header h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0;
 }
 
-.par-btn.selected, .gir-btn.selected {
+.hole-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-arrow {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+/* Option groups */
+.option-group {
+  margin-bottom: 1.2rem;
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.option-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--primary-dark);
+}
+
+/* Button options */
+.button-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.option-btn {
+  flex: 1;
+  min-width: 50px;
+  padding: 8px 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.option-btn.selected {
   background-color: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
 }
 
+/* Fairway selector */
+.fairway-selector-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fairway-row {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.fairway-btn {
+  flex: 1;
+  padding: 10px 5px;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.fairway-btn.selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.fairway-btn.hit.selected {
+  background-color: var(--secondary-color);
+}
+
+.tee-club-row {
+  width: 100%;
+}
+
+.tee-club-select {
+  width: 100%;
+  padding: 8px 5px;
+}
+
+/* Green grid */
 .green-grid {
   display: grid;
   grid-template-rows: repeat(3, 1fr);
-  width: 210px;
-  height: 210px;
-  margin: 0 auto 1.5rem auto;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--border-color);
 }
 
 .green-row {
@@ -312,184 +390,97 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
+  cursor: pointer;
 }
 
 .green-section.center {
-  /* Only apply the green background when selected */
-  background-color: var(--light-background); 
-  color: var(--text-color);
+  background-color: var(--light-background);
 }
 
-.green-section.center.selected {
-  background-color: var(--secondary-color);
-  color: white;
-}
-
-/* All selected sections should have the primary color */
 .green-section.selected {
   background-color: var(--primary-color);
   color: white;
 }
 
-/* But center should use secondary color when selected */
 .green-section.center.selected {
   background-color: var(--secondary-color);
 }
 
-.fairway-selector {
-  display: flex;
-  height: 50px;
-  margin-bottom: 1.5rem;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.fairway-section {
-  flex: 1;
+/* GIR and approach */
+.gir-approach-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: var(--light-background);
-  border: none;
-  font-size: 0.9rem;
+  gap: 10px;
 }
 
-.fairway-section.hit {
-  background-color: var(--secondary-color);
-  color: white;
-}
-
-.fairway-section.selected {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.approach-inputs, .putting-inputs {
-  display: grid;
-  gap: 1rem;
-  max-height: 300px; /* Reduced from original height */
-  overflow-y: auto; /* Add scrolling if needed */
-}
-
-.input-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.input-row label {
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-input[type="number"], select {
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.up-down-btns {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.up-down-btns button {
+.approach-inputs {
   flex: 1;
-  padding: 0.5rem;
-  background-color: var(--light-background);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+  max-width: 100px;
 }
 
-.up-down-btns button.selected {
-  background-color: var(--primary-color);
-  color: white;
+.approach-section {
+  margin-bottom: 1rem;
 }
 
-.putt-counter {
+/* Putting */
+.putting-container {
   display: flex;
   align-items: center;
-  max-width: 200px;
+  gap: 10px;
 }
 
-.putt-btn {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border-color);
-  background-color: var(--light-background);
-  border-radius: 4px;
-  font-size: 1.2rem;
-}
-
-.putt-count {
+.putting-inputs {
   flex: 1;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
+  max-width: 100px;
 }
 
-.score-input {
-  display: flex;
-  align-items: center;
-  max-width: 400px;
-  margin: 0 auto 1rem; /* Center it */
+.putts-counter {
+  flex: 2;
 }
 
-.score-btn {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border-color);
-  background-color: var(--light-background);
-  border-radius: 4px;
-  font-size: 1.2rem;
+.putts-counter label {
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+  display: block;
 }
 
-.score-input input {
-  flex: 1;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
+.compact-input {
+  width: 100%;
+  padding: 5px;
+  font-size: 0.8rem;
 }
 
-.score-relative {
-  font-weight: bold;
-  text-align: center;
+/* Save button */
+.save-btn {
+  margin-top: 1.5rem;
+  padding: 10px;
+  width: 100%;
 }
 
-.navigation-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-/* View Round Page */
+/* ===== VIEW ROUND PAGE ===== */
 .view-round-container {
   max-width: 900px;
   margin: 0 auto;
 }
 
 .round-stats-summary {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .scorecard {
-  margin-bottom: 2rem;
-}
-
-.scorecard-table {
+  margin-bottom: 1.5rem;
   overflow-x: auto;
 }
 
-.scorecard-table table {
+.scorecard-table {
   width: 100%;
   border-collapse: collapse;
   text-align: center;
 }
 
-.scorecard-table th, .scorecard-table td {
-  padding: 0.75rem;
+.scorecard-table th, 
+.scorecard-table td {
+  padding: 0.6rem;
   border: 1px solid var(--border-color);
 }
 
@@ -516,307 +507,114 @@ input[type="number"], select {
   color: var(--text-color);
 }
 
-/* Responsive adjustments */
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 768px) {
-  .dashboard-header, .round-header {
+  .dashboard-header, 
+  .round-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.8rem;
   }
   
-  .round-actions {
+  .round-actions,
+  .data-actions {
     width: 100%;
-  }
-  
-  .hole-input-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
   
   .navigation-buttons {
     flex-direction: column;
   }
   
-  .data-actions {
+  .gir-approach-container,
+  .putting-container {
     flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .approach-inputs,
+  .putting-inputs {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 0.8rem;
   }
 }
 
 @media (min-width: 768px) {
   .hole-input-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 }
 
-/* New styles to add to index.css */
-
-/* Track Round page enhancements */
-.track-header {
+/* For future MongoDB integration */
+.sync-status {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  margin-top: 0.5rem;
+  gap: 0.5rem;
 }
 
-.hole-nav {
+.sync-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--success-color);
+}
+
+.sync-indicator.offline {
+  background-color: var(--danger-color);
+}
+
+.sync-indicator.syncing {
+  background-color: var(--warning-color);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Add these styles to your CSS file */
+.gir-putting-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 15px;
-}
-
-.nav-arrow {
-  font-size: 24px;
-  color: var(--primary-color);
-  cursor: pointer;
-}
-
-.option-group {
-  margin-bottom: 25px;
-}
-
-.option-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: var(--primary-dark);
-}
-
-.button-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.option-btn {
-  flex: 1;
-  min-width: 60px;
-  padding: 12px 8px;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  background-color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.option-btn.selected {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-.save-btn {
-  margin-top: 30px;
-  padding: 15px;
-  font-size: 18px;
-}
-
-/* Home screen enhancements */
-.home-actions {
-  margin: 30px 0;
-}
-
-.btn-group {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-group .btn {
-  flex: 1;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 15px;
-  margin-bottom: 20px;
-}
-/* Add these styles to your index.css */
-
-/* More compact header */
-.header {
-  padding: 8px;
-}
-
-.header h1 {
-  font-size: 1.2rem;
-  margin-bottom: 0;
-}
-
-/* More compact track header */
-.track-header {
-  margin-bottom: 12px;
-}
-
-.track-header h2 {
-  font-size: 1.1rem;
-  margin-bottom: 0;
-}
-
-/* More compact option groups */
-.option-group {
-  margin-bottom: 15px;
-}
-
-.option-title {
-  margin-bottom: 5px;
-  font-size: 0.9rem;
-}
-
-/* Smaller buttons */
-.option-btn {
-  padding: 8px 6px;
-  font-size: 0.9rem;
-  min-width: 50px;
-}
-
-.button-row {
-  gap: 5px;
-}
-
-/* Smaller green grid */
-.green-grid {
-  width: 180px;
-  height: 180px;
-}
-
-/* Smaller save button */
-.save-btn {
-  margin-top: 20px;
-  padding: 10px;
-}
-
-/* Adjust spacing for all content */
-.content {
-  padding: 12px;
-}
-
-/* More compact form elements */
-input[type="number"], select {
-  padding: 6px;
-  font-size: 0.9rem;
-}
-
-.input-row label {
-  font-size: 0.8rem;
-  margin-bottom: 3px;
-}
-
-/* Add to your CSS */
-.gir-approach-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .approach-inputs {
   flex: 1;
-  max-width: 100px;
-}
-
-.compact-input {
-  width: 100%;
-  padding: 5px;
-  font-size: 0.8rem;
-}
-
-.approach-section {
-  margin-bottom: 20px;
-}
-/* Add to your CSS */
-.putting-container {
   display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.putting-inputs {
-  flex: 1;
-  max-width: 100px;
-}
-
-.putts-counter {
-  flex: 2;
-}
-
-.putts-counter label {
-  font-size: 0.8rem;
-  margin-bottom: 3px;
-  display: block;
-}
-
-/* Add to your CSS */
-.fairway-tee-container {
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
 }
 
-.fairway-section {
-  flex: 3;
-}
-
-.tee-club-section {
+.green-grid-container {
   flex: 1;
-  min-width: 90px;
+  display: flex;
+  justify-content: center;
 }
 
-.tee-club-select {
-  width: 100%;
-  padding: 7px 5px;
+.compact-button-row {
+  display: flex;
+  gap: 4px;
+}
+
+.compact-button-row .option-btn {
+  padding: 5px 8px;
   font-size: 0.9rem;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  background-color: white;
+  min-width: 35px;
 }
 
-/* Make fairway buttons a bit more compact */
-.fairway-section .button-row .option-btn {
-  padding: 8px 4px;
+/* Adjust input row to be more compact */
+.input-row {
+  margin-bottom: 6px;
+}
+
+.input-row label {
+  display: block;
+  margin-bottom: 3px;
   font-size: 0.85rem;
-}
-
-/* Fairway and tee club selector styling */
-.fairway-selector-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.fairway-row {
-  display: flex;
-  width: 100%;
-  gap: 8px;
-}
-
-.fairway-btn {
-  flex: 1;
-  padding: 10px 5px;
-  font-size: 0.9rem;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  background-color: white;
-  cursor: pointer;
-}
-
-.fairway-btn.selected {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-.fairway-btn.selected.hit {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-}
-
-.tee-club-row {
-  width: 100%;
-}
-
-.tee-club-select {
-  width: 100%;
-  padding: 10px 5px;
-  font-size: 0.9rem;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  background-color: white;
 }

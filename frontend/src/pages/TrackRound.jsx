@@ -1,5 +1,5 @@
 // src/pages/TrackRound.jsx
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRound, updateHoleData } from '../utils/localStorage';
 import GreenGrid from '../components/round/GreenGrid';
@@ -13,20 +13,23 @@ const TrackRound = () => {
   const [round, setRound] = useState(null);
   const [holeData, setHoleData] = useState({
     number: currentHole,
-    par: 4, // Default par
-    score: 4, // Default to par
-    fairwayHit: null, // 'hit', 'left', 'right'
-    teeClub: '', // Club used off the tee
+    par: 4,
+    score: 4,
+    fairwayHit: null,
+    teeClub: '',
     girHit: false,
     greenPosition: null,
     approachDistance: 0,
     approachClub: '',
     firstPuttDistance: 0,
-    putts: 2
+    putts: 2,
+    upAndDownAttempt: false,
+    upAndDownSuccess: false,
+    fromSand: false
   });
 
+  // Load round data when component mounts or params change
   useEffect(() => {
-    // Load round data
     const roundData = getRound(roundId);
     if (!roundData) {
       navigate('/');
@@ -40,74 +43,77 @@ const TrackRound = () => {
     if (existingHoleData) {
       setHoleData(existingHoleData);
     } else {
-      // Reset for new hole
+      // Reset for new hole with sensible defaults
       setHoleData({
         number: currentHole,
         par: 4,
-        score: 4, // Default to par
+        score: 4,
         fairwayHit: null,
+        teeClub: '',
         girHit: false,
         greenPosition: null,
-        putts: 2 // Default to 2 putts
+        approachDistance: 0,
+        approachClub: '',
+        firstPuttDistance: 0,
+        putts: 2,
+        upAndDownAttempt: false,
+        upAndDownSuccess: false,
+        fromSand: false
       });
     }
   }, [roundId, currentHole, navigate]);
 
-  const handleInputChange = (field, value) => {
-    setHoleData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    
-    // Auto update score when par changes
-    if (field === 'par') {
-      setHoleData(prev => ({
+  // Handle input changes
+  const handleInputChange = useCallback((field, value) => {
+    setHoleData(prev => {
+      const newData = {
         ...prev,
-        score: value // Default score to par
-      }));
-    }
-    
-    // Update GIR when greenPosition changes
-    if (field === 'greenPosition') {
-      const girHit = value === 'center';
-      setHoleData(prev => ({
-        ...prev,
-        girHit
-      }));
-    }
-  };
+        [field]: value
+      };
+      
+      // Auto update GIR when greenPosition changes
+      if (field === 'greenPosition') {
+        newData.girHit = value === 'center';
+      }
+      
+      // Auto update score when par changes
+      if (field === 'par') {
+        newData.score = value;
+      }
+      
+      return newData;
+    });
+  }, []);
 
-  const handleSaveHole = () => {
+  // Save hole data and navigate
+  const handleSaveHole = useCallback(() => {
     // Save current hole data
     const updatedRound = updateHoleData(roundId, currentHole, holeData);
     setRound(updatedRound);
     
     // Navigate to next hole or summary if finished
-    if (currentHole < (round.holeCount || 18)) {
+    if (currentHole < (round?.holeCount || 18)) {
       navigate(`/track/${roundId}/${currentHole + 1}`);
     } else {
       navigate(`/round/${roundId}`);
     }
-  };
+  }, [roundId, currentHole, holeData, round, navigate]);
 
-  const handlePrevHole = () => {
+  // Navigation between holes
+  const handlePrevHole = useCallback(() => {
     if (currentHole > 1) {
       navigate(`/track/${roundId}/${currentHole - 1}`);
     }
-  };
+  }, [currentHole, roundId, navigate]);
   
-  const handleNextHole = () => {
-    if (currentHole < (round.holeCount || 18)) {
+  const handleNextHole = useCallback(() => {
+    if (currentHole < (round?.holeCount || 18)) {
       navigate(`/track/${roundId}/${currentHole + 1}`);
     }
-  };
+  }, [currentHole, round, roundId, navigate]);
 
-  if (!round) {
-    return <div>Loading...</div>;
-  }
-
-  // Dynamic score options based on par
-  const generateScoreOptions = () => {
+  // Generate score options based on par
+  const generateScoreOptions = useCallback(() => {
     const par = holeData.par || 4;
     return [
       par - 1, // Birdie
@@ -116,7 +122,11 @@ const TrackRound = () => {
       par + 2, // Double bogey
       par + 3  // Triple bogey
     ];
-  };
+  }, [holeData.par]);
+
+  if (!round) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="track-round-container">
@@ -146,24 +156,24 @@ const TrackRound = () => {
         </div>
       </div>
       
+      {/* Only show fairway for Par 4 and 5 */}
       {holeData.par > 3 && (
-  <div className="option-group">
-    <div className="option-title">FAIRWAY & TEE CLUB</div>
-    <FairwaySelector
-      selected={holeData.fairwayHit}
-      onChange={(value) => handleInputChange('fairwayHit', value)}
-      teeClub={holeData.teeClub}
-      onClubChange={(value) => handleInputChange('teeClub', value)}
-    />
-  </div>
-)}
+        <div className="option-group">
+          <div className="option-title">FAIRWAY & TEE CLUB</div>
+          <FairwaySelector
+            selected={holeData.fairwayHit}
+            onChange={(value) => handleInputChange('fairwayHit', value)}
+            teeClub={holeData.teeClub}
+            onClubChange={(value) => handleInputChange('teeClub', value)}
+          />
+        </div>
+      )}
       
-
-
-
-<div className="option-group approach-section">
-  <div className="option-title">GREEN IN REGULATION</div>
-  <div className="gir-approach-container">
+      
+<div className="option-group">
+  <div className="option-title">GREEN & PUTTING</div>
+  <div className="gir-putting-container">
+    {/* Left side: Approach inputs */}
     <div className="approach-inputs">
       <div className="input-row">
         <label>Approach (m):</label>
@@ -184,35 +194,22 @@ const TrackRound = () => {
           className="compact-input"
         >
           <option value="">Club</option>
-          <option value="7 Wood">7W</option>
-          <option value="4 Iron">4i</option>
-          <option value="5 Iron">5i</option>
-          <option value="6 Iron">6i</option>
-          <option value="7 Iron">7i</option>
-          <option value="8 Iron">8i</option>
-          <option value="9 Iron">9i</option>
+          <option value="7Wood">7W</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
           <option value="PW">PW</option>
           <option value="50">50</option>
           <option value="54">54</option>
           <option value="58">58</option>
         </select>
       </div>
-    </div>
-    <GreenGrid
-      selected={holeData.greenPosition}
-      onChange={(value) => handleInputChange('greenPosition', value)}
-      hideText={true}
-    />
-  </div>
-</div>
-
       
-      
-      <div className="option-group">
-  <div className="option-title">PUTTING</div>
-  <div className="putting-container">
-    <div className="putting-inputs">
-      <div>
+      {/* Putting inputs */}
+      <div className="input-row">
         <label>First putt (m):</label>
         <input
           type="number"
@@ -224,27 +221,35 @@ const TrackRound = () => {
           className="compact-input"
         />
       </div>
-    </div>
-    <div className="putts-counter">
-      <label>Total putts:</label>
-      <div className="button-row">
-        <button 
-          className={`option-btn ${holeData.putts === 1 ? 'selected' : ''}`}
-          onClick={() => handleInputChange('putts', 1)}
-        >1</button>
-        <button 
-          className={`option-btn ${holeData.putts === 2 ? 'selected' : ''}`}
-          onClick={() => handleInputChange('putts', 2)}
-        >2</button>
-        <button 
-          className={`option-btn ${holeData.putts === 3 ? 'selected' : ''}`}
-          onClick={() => handleInputChange('putts', 3)}
-        >3</button>
-        <button 
-          className={`option-btn ${holeData.putts === 4 ? 'selected' : ''}`}
-          onClick={() => handleInputChange('putts', 4)}
-        >4+</button>
+      <div className="input-row">
+        <label>Total putts:</label>
+        <div className="compact-button-row">
+          <button 
+            className={`option-btn ${holeData.putts === 1 ? 'selected' : ''}`}
+            onClick={() => handleInputChange('putts', 1)}
+          >1</button>
+          <button 
+            className={`option-btn ${holeData.putts === 2 ? 'selected' : ''}`}
+            onClick={() => handleInputChange('putts', 2)}
+          >2</button>
+          <button 
+            className={`option-btn ${holeData.putts === 3 ? 'selected' : ''}`}
+            onClick={() => handleInputChange('putts', 3)}
+          >3</button>
+          <button 
+            className={`option-btn ${holeData.putts === 4 ? 'selected' : ''}`}
+            onClick={() => handleInputChange('putts', 4)}
+          >4+</button>
+        </div>
       </div>
+    </div>
+    
+    {/* Right side: Green grid */}
+    <div className="green-grid-container">
+      <GreenGrid
+        selected={holeData.greenPosition}
+        onChange={(value) => handleInputChange('greenPosition', value)}
+      />
     </div>
   </div>
 </div>

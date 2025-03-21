@@ -1,5 +1,5 @@
 // src/components/common/DataManager.jsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { exportData, importData, clearOldRounds } from '../../utils/localStorage';
 
 const DataManager = ({ currentRoundId }) => {
@@ -26,6 +26,9 @@ const DataManager = ({ currentRoundId }) => {
     try {
       await importData(file);
       setMessage({ type: 'success', text: 'Data imported successfully' });
+      setTimeout(() => {
+        window.location.reload(); // Refresh to show imported data
+      }, 1500);
     } catch (error) {
       setMessage({ type: 'error', text: error.message });
     } finally {
@@ -39,8 +42,24 @@ const DataManager = ({ currentRoundId }) => {
     if (window.confirm('Are you sure you want to remove all rounds except the current one? This helps save space on your device.')) {
       clearOldRounds(currentRoundId);
       setMessage({ type: 'success', text: 'Old rounds cleared' });
-      setTimeout(() => setMessage(null), 3000);
+      setTimeout(() => {
+        window.location.reload(); // Refresh to show changes
+      }, 1500);
     }
+  };
+  
+  // This will be useful for future MongoDB integration
+  const renderSyncStatus = () => {
+    return (
+      <div className="sync-status">
+        {/* This section is for future MongoDB integration */}
+        {/*
+        <div className="sync-indicator"></div>
+        <span>All data synced</span>
+        <button className="btn btn-outline btn-sm">Sync Now</button>
+        */}
+      </div>
+    );
   };
   
   return (
@@ -81,8 +100,10 @@ const DataManager = ({ currentRoundId }) => {
           </button>
         )}
       </div>
+      
+      {renderSyncStatus()}
     </div>
   );
 };
 
-export default DataManager;
+export default React.memo(DataManager);

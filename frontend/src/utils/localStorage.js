@@ -7,6 +7,11 @@ const initializeStorage = () => {
     rounds: [],
     settings: {
       units: 'meters' // or 'yards'
+    },
+    // For future MongoDB integration
+    syncStatus: {
+      lastSynced: null,
+      pendingChanges: false
     }
   };
   
@@ -40,19 +45,26 @@ export const getRound = (roundId) => {
   return rounds.find(round => round.id === roundId);
 };
 
-
 // Create new round
 export const createRound = (roundData) => {
   const data = getStorageData();
   const newRound = {
-    id: Date.now().toString(), // Simple ID generation
+    id: Date.now().toString(),
     date: new Date().toISOString(),
+    courseName: 'My Golf Course',
     holeCount: 18, // Default to 18 holes
     ...roundData,
-    holes: []
+    holes: [],
+    // For future MongoDB integration
+    syncedToServer: false,
+    updatedAt: new Date().toISOString()
   };
   
   data.rounds.push(newRound);
+  
+  // Mark that we have pending changes to sync
+  data.syncStatus.pendingChanges = true;
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   
   return newRound;
@@ -89,6 +101,11 @@ export const updateHoleData = (roundId, holeNumber, holeData) => {
   // Sort holes by number
   data.rounds[roundIndex].holes.sort((a, b) => a.number - b.number);
   
+  // Update timestamp and sync status
+  data.rounds[roundIndex].updatedAt = new Date().toISOString();
+  data.rounds[roundIndex].syncedToServer = false;
+  data.syncStatus.pendingChanges = true;
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   return data.rounds[roundIndex];
 };
@@ -97,6 +114,10 @@ export const updateHoleData = (roundId, holeNumber, holeData) => {
 export const deleteRound = (roundId) => {
   const data = getStorageData();
   data.rounds = data.rounds.filter(round => round.id !== roundId);
+  
+  // Mark pending changes
+  data.syncStatus.pendingChanges = true;
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 
@@ -117,9 +138,7 @@ export const updateSettings = (newSettings) => {
   return data.settings;
 };
 
-
-
-// Export all golf data as JSON
+// Export data as JSON
 export const exportData = () => {
   const data = getStorageData();
   const dataStr = JSON.stringify(data);
@@ -159,7 +178,9 @@ export const importData = async (file) => {
         // Add only new rounds to the existing data
         currentData.rounds = [...currentData.rounds, ...newRounds];
         
-        // Save the merged data
+        // Mark that we have pending changes to sync
+        currentData.syncStatus.pendingChanges = true;
+        
         localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
         resolve(true);
       } catch (error) {
@@ -172,7 +193,7 @@ export const importData = async (file) => {
   });
 };
 
-// Clear all rounds except the current one
+// Clear old rounds except the current one
 export const clearOldRounds = (currentRoundId) => {
   const data = getStorageData();
   
@@ -180,12 +201,18 @@ export const clearOldRounds = (currentRoundId) => {
   const currentRound = data.rounds.find(round => round.id === currentRoundId);
   
   data.rounds = currentRound ? [currentRound] : [];
+  data.syncStatus.pendingChanges = true;
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   
   return true;
 };
 
-
+// Functions for future MongoDB integration
+export const getSyncStatus = () => {
+  const data = getStorageData();
+  return data.syncStatus;
+};
 
 // Initialize storage on module load
 initializeStorage();

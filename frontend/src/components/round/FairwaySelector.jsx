@@ -1,4 +1,6 @@
 // src/components/round/FairwaySelector.jsx
+import React from 'react';
+
 const FairwaySelector = ({ selected, onChange, teeClub, onClubChange }) => {
   const clubs = [
     "Driver", "7W", "4", "5", "6", "7", "8", "9", "PW", "50", "54", "58"
@@ -14,7 +16,7 @@ const FairwaySelector = ({ selected, onChange, teeClub, onClubChange }) => {
           Miss Left
         </button>
         <button 
-          className={`fairway-btn ${selected === 'hit' ? 'selected' : ''}`}
+          className={`fairway-btn hit ${selected === 'hit' ? 'selected' : ''}`}
           onClick={() => onChange('hit')}
         >
           Hit
@@ -42,4 +44,4 @@ const FairwaySelector = ({ selected, onChange, teeClub, onClubChange }) => {
   );
 };
 
-export default FairwaySelector;
+export default React.memo(FairwaySelector);
