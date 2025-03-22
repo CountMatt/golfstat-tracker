@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongodb:
+    image: mongo:6
+    container_name: golf-stats-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=golfstats
+
+  # Backend API service
+  backend:
+    build: 
+      context: ./server
+    container_name: golf-stats-backend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    environment:
+      - PORT=5001
+      - MONGODB_URI=mongodb://mongodb:27017/golfstats
+      - NODE_ENV=production
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  # Frontend service with Nginx
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: golf-stats-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://localhost:5001/api
+
+volumes:
+  mongodb_data:
