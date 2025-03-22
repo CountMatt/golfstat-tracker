@@ -300,3 +300,106 @@ export const getSyncStatus = () => {
 
 // Initialize storage on module load
 initializeStorage();
+
+
+// Add this to your src/utils/localStorage.js
+
+// Import axios for API calls
+import axios from 'axios';
+
+// API base URL
+const API_URL = 'http://localhost:5001/api';
+
+// Create an API instance
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+// Sync data with the server
+export const syncWithServer = async () => {
+  try {
+    const data = getStorageData();
+    const syncResults = {
+      success: true,
+      totalSynced: 0,
+      errors: []
+    };
+
+    // Sync rounds
+    for (const round of data.rounds) {
+      try {
+        // Convert localStorage format to server format
+        const serverRound = {
+          clientId: round.id,
+          date: round.date,
+          courseName: round.courseName,
+          holeCount: round.holeCount || 18,
+          holes: round.holes
+        };
+
+        // Send to server
+        await api.post('/rounds', serverRound);
+        
+        // Mark as synced
+        round.syncedToServer = true;
+        round.lastSynced = new Date().toISOString();
+        
+        syncResults.totalSynced++;
+      } catch (error) {
+        console.error(`Failed to sync round ${round.id}:`, error);
+        syncResults.errors.push({ id: round.id, error: error.message });
+        syncResults.success = false;
+      }
+    }
+
+    // Sync settings
+    try {
+      await api.post('/settings', data.settings);
+    } catch (error) {
+      console.error('Failed to sync settings:', error);
+      syncResults.errors.push({ type: 'settings', error: error.message });
+      syncResults.success = false;
+    }
+
+    // Update sync status
+    data.syncStatus = {
+      lastSynced: new Date().toISOString(),
+      pendingChanges: syncResults.errors.length > 0
+    };
+
+    // Save updated data back to localStorage
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+    return {
+      success: syncResults.success,
+      message: syncResults.success 
+        ? `Successfully synced ${syncResults.totalSynced} rounds` 
+        : `Synced ${syncResults.totalSynced} rounds with ${syncResults.errors.length} errors`
+    };
+  } catch (error) {
+    console.error('Error syncing with server:', error);
+    return {
+      success: false,
+      message: 'Failed to sync with server'
+    };
+  }
+};
+
+// Check server connection
+export const checkServerConnection = async () => {
+  try {
+    const response = await api.get('/sync/status');
+    return {
+      online: true,
+      lastSynced: response.data.lastSynced
+    };
+  } catch (error) {
+    return {
+      online: false,
+      lastSynced: null
+    };
+  }
+};

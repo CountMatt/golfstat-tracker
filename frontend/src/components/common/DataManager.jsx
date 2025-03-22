@@ -1,66 +1,91 @@
-// src/components/common/DataManager.jsx
-import React, { useState } from 'react';
-import { exportData, importData, clearOldRounds } from '../../utils/localStorage';
+// In your DataManager.jsx component
+
+import { useState, useEffect } from 'react';
+import { syncWithServer, checkServerConnection } from '../../utils/localStorage';
 
 const DataManager = ({ currentRoundId }) => {
+  // Existing state
   const [importing, setImporting] = useState(false);
   const [message, setMessage] = useState(null);
   
-  const handleExport = () => {
+  // Add sync state
+  const [syncStatus, setSyncStatus] = useState({
+    online: false,
+    syncing: false,
+    lastSynced: null
+  });
+  
+  // Check connection on component mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      const status = await checkServerConnection();
+      setSyncStatus(prev => ({ ...prev, ...status }));
+    };
+    
+    checkConnection();
+    
+    // Set up periodic check (every 30 seconds)
+    const intervalId = setInterval(checkConnection, 30000);
+    
+    return () => clearInterval(intervalId);
+  }, []);
+  
+  // Handle sync
+  const handleSync = async () => {
+    setSyncStatus(prev => ({ ...prev, syncing: true }));
+    
     try {
-      exportData();
-      setMessage({ type: 'success', text: 'Data exported successfully' });
+      const result = await syncWithServer();
+      
+      setMessage({
+        type: result.success ? 'success' : 'error',
+        text: result.message
+      });
+      
+      const newStatus = await checkServerConnection();
+      setSyncStatus({
+        ...newStatus,
+        syncing: false
+      });
+      
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to export data' });
+      setMessage({
+        type: 'error',
+        text: 'Failed to sync with server'
+      });
+      
+      setSyncStatus(prev => ({ ...prev, syncing: false }));
+      setTimeout(() => setMessage(null), 3000);
     }
   };
   
-  const handleImport = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    setImporting(true);
-    setMessage(null);
-    
-    try {
-      await importData(file);
-      setMessage({ type: 'success', text: 'Data imported successfully' });
-      setTimeout(() => {
-        window.location.reload(); // Refresh to show imported data
-      }, 1500);
-    } catch (error) {
-      setMessage({ type: 'error', text: error.message });
-    } finally {
-      setImporting(false);
-      // Reset the file input
-      event.target.value = '';
-    }
-  };
-  
-  const handleClearOld = () => {
-    if (window.confirm('Are you sure you want to remove all rounds except the current one? This helps save space on your device.')) {
-      clearOldRounds(currentRoundId);
-      setMessage({ type: 'success', text: 'Old rounds cleared' });
-      setTimeout(() => {
-        window.location.reload(); // Refresh to show changes
-      }, 1500);
-    }
-  };
-  
-  // This will be useful for future MongoDB integration
+  // Render sync status
   const renderSyncStatus = () => {
     return (
       <div className="sync-status">
-        {/* This section is for future MongoDB integration */}
-        {/*
-        <div className="sync-indicator"></div>
-        <span>All data synced</span>
-        <button className="btn btn-outline btn-sm">Sync Now</button>
-        */}
+        <div className={`sync-indicator ${syncStatus.syncing ? 'syncing' : syncStatus.online ? '' : 'offline'}`}></div>
+        <span>
+          {syncStatus.syncing
+            ? 'Syncing...'
+            : syncStatus.online
+              ? syncStatus.lastSynced
+                ? `Last synced: ${new Date(syncStatus.lastSynced).toLocaleString()}`
+                : 'Connected, not synced yet'
+              : 'Offline'}
+        </span>
+        <button
+          className="btn btn-outline btn-sm"
+          onClick={handleSync}
+          disabled={syncStatus.syncing || !syncStatus.online}
+        >
+          Sync Now
+        </button>
       </div>
     );
   };
+  
+  // ... rest of your existing code
   
   return (
     <div className="data-manager">
@@ -73,10 +98,8 @@ const DataManager = ({ currentRoundId }) => {
       )}
       
       <div className="data-actions">
-        <button 
-          onClick={handleExport}
-          className="btn btn-outline"
-        >
+        {/* Existing buttons */}
+        <button onClick={handleExport} className="btn btn-outline">
           Export Data
         </button>
         
@@ -92,18 +115,16 @@ const DataManager = ({ currentRoundId }) => {
         </label>
         
         {currentRoundId && (
-          <button 
-            onClick={handleClearOld}
-            className="btn btn-outline danger"
-          >
+          <button onClick={handleClearOld} className="btn btn-outline danger">
             Clear Old Rounds
           </button>
         )}
       </div>
       
+      {/* Add sync status section */}
       {renderSyncStatus()}
     </div>
   );
 };
 
-export default React.memo(DataManager);
+export default DataManager;
