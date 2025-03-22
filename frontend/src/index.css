@@ -153,13 +153,7 @@ select {
   flex: 1;
 }
 
-/* Stats cards */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
+
 
 .stat-card {
   background-color: white;
@@ -287,7 +281,7 @@ select {
 
 /* Option groups */
 .option-group {
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.5rem;
   background-color: white;
   border-radius: 8px;
   padding: 1rem;
@@ -296,7 +290,7 @@ select {
 
 .option-title {
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.1rem;
   font-size: 0.9rem;
   color: var(--primary-dark);
 }
@@ -836,8 +830,9 @@ body {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.1rem;
 }
 
 .stat-card {
@@ -1023,9 +1018,15 @@ body {
 /* Responsive Styles */
 @media (max-width: 768px) {
   .button-grid,
-  .stats-grid,
   .data-actions {
     grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 480px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+    }
   }
   
   .round-item {

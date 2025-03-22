@@ -3,7 +3,7 @@ import React from 'react';
 
 const FairwaySelector = ({ selected, onChange, teeClub, onClubChange }) => {
   const clubs = [
-    "Driver", "7W", "4", "5", "6", "7", "8", "9", "PW", "50", "54", "58"
+    "Driver", "7W", "4", "5", "6"
   ];
 
   return (
