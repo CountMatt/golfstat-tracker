@@ -307,20 +307,21 @@ initializeStorage();
 // Import axios for API calls
 import axios from 'axios';
 
-// API base URL
-const API_URL = 'http://localhost:5001/api';
+const API_URL = 'http://localhost:5001/api'; // Or your server URL
 
-// Create an API instance
+// Create an API instance with proper error handling
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 10000 // Add a timeout to prevent hanging requests
 });
 
-// Sync data with the server
+
 export const syncWithServer = async () => {
   try {
+    console.log('Starting sync with server...');
     const data = getStorageData();
     const syncResults = {
       success: true,
@@ -329,6 +330,7 @@ export const syncWithServer = async () => {
     };
 
     // Sync rounds
+    console.log(`Attempting to sync ${data.rounds.length} rounds`);
     for (const round of data.rounds) {
       try {
         // Convert localStorage format to server format
@@ -340,27 +342,32 @@ export const syncWithServer = async () => {
           holes: round.holes
         };
 
+        console.log(`Syncing round ${round.id} (${round.courseName})`);
+        
         // Send to server
-        await api.post('/rounds', serverRound);
+        const response = await api.post('/rounds', serverRound);
         
         // Mark as synced
         round.syncedToServer = true;
         round.lastSynced = new Date().toISOString();
         
         syncResults.totalSynced++;
+        console.log(`Successfully synced round ${round.id}`);
       } catch (error) {
         console.error(`Failed to sync round ${round.id}:`, error);
-        syncResults.errors.push({ id: round.id, error: error.message });
+        syncResults.errors.push({ id: round.id, error: error.message || 'Unknown error' });
         syncResults.success = false;
       }
     }
 
     // Sync settings
     try {
+      console.log('Syncing settings...');
       await api.post('/settings', data.settings);
+      console.log('Settings synced successfully');
     } catch (error) {
       console.error('Failed to sync settings:', error);
-      syncResults.errors.push({ type: 'settings', error: error.message });
+      syncResults.errors.push({ type: 'settings', error: error.message || 'Unknown error' });
       syncResults.success = false;
     }
 
@@ -373,30 +380,37 @@ export const syncWithServer = async () => {
     // Save updated data back to localStorage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
+    const message = syncResults.success 
+      ? `Successfully synced ${syncResults.totalSynced} rounds` 
+      : `Synced ${syncResults.totalSynced} rounds with ${syncResults.errors.length} errors`;
+    
+    console.log('Sync complete:', message);
+    
     return {
       success: syncResults.success,
-      message: syncResults.success 
-        ? `Successfully synced ${syncResults.totalSynced} rounds` 
-        : `Synced ${syncResults.totalSynced} rounds with ${syncResults.errors.length} errors`
+      message: message
     };
   } catch (error) {
     console.error('Error syncing with server:', error);
     return {
       success: false,
-      message: 'Failed to sync with server'
+      message: 'Failed to sync with server: ' + (error.message || 'Unknown error')
     };
   }
 };
 
-// Check server connection
+// Enhanced server connection check
 export const checkServerConnection = async () => {
   try {
+    console.log('Checking server connection...');
     const response = await api.get('/sync/status');
+    console.log('Server is online:', response.data);
     return {
       online: true,
       lastSynced: response.data.lastSynced
     };
   } catch (error) {
+    console.error('Server connection check failed:', error);
     return {
       online: false,
       lastSynced: null

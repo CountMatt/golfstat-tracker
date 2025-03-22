@@ -1,4 +1,5 @@
 // src/pages/Home.jsx
+import { syncWithServer, checkServerConnection } from '../utils/localStorage';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getRounds, createRound, clearOldRounds, exportData, importData } from '../utils/localStorage';
@@ -18,6 +19,11 @@ import ArrowForwardIcon from '../components/icons/ArrowForwardIcon';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [syncStatus, setSyncStatus] = useState({
+    online: false,
+    syncing: false,
+    lastSynced: null
+  });
   const [rounds, setRounds] = useState([]);
   const [currentRoundId, setCurrentRoundId] = useState(null);
   const [stats, setStats] = useState({
@@ -47,6 +53,25 @@ const Home = () => {
     setStats(calculateOverallStats(storedRounds));
   }, []);
 
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const status = await checkServerConnection();
+        setSyncStatus(prev => ({ ...prev, ...status }));
+      } catch (error) {
+        console.error("Error checking server connection:", error);
+      }
+    };
+    
+    checkConnection();
+    
+    // Check connection every 30 seconds
+    const intervalId = setInterval(checkConnection, 30000);
+    return () => clearInterval(intervalId);
+  }, []);
+  
+  
+
   const handleStartNewRound = (holeCount) => {
     try {
       // Create a new round
@@ -68,6 +93,36 @@ const Home = () => {
     }
   };
 
+
+  const handleSync = async () => {
+    setSyncStatus(prev => ({ ...prev, syncing: true }));
+    
+    try {
+      const result = await syncWithServer();
+      
+      setMessage({
+        type: result.success ? 'success' : 'error',
+        text: result.message
+      });
+      
+      const newStatus = await checkServerConnection();
+      setSyncStatus({
+        ...newStatus,
+        syncing: false
+      });
+      
+      setTimeout(() => setMessage(null), 3000);
+    } catch (error) {
+      setMessage({
+        type: 'error',
+        text: 'Failed to sync with server: ' + (error.message || 'Unknown error')
+      });
+      
+      setSyncStatus(prev => ({ ...prev, syncing: false }));
+      setTimeout(() => setMessage(null), 3000);
+    }
+  };
+  
   const handleExportData = () => {
     try {
       exportData();
@@ -314,40 +369,74 @@ const Home = () => {
           )}
         </div>
         
-        {/* Data Management Section */}
-        <div className="card data-card">
-          <h2 className="card-title">Data Management</h2>
-          
-          <div className="data-actions">
-            <button 
-              className="btn btn-outline"
-              onClick={handleExportData}
-            >
-              <DownloadIcon />
-              <span>Export Data</span>
-            </button>
-            
-            <label className="btn btn-outline import-btn">
-              <UploadIcon />
-              <span>Import Data</span>
-              <input 
-                type="file" 
-                accept=".json"
-                onChange={handleImportData}
-                disabled={importing}
-                style={{ display: 'none' }}
-              />
-            </label>
-            
-            <button 
-              className="btn btn-danger"
-              onClick={handleClearOldRounds}
-            >
-              <DeleteIcon />
-              <span>Clear Old Rounds</span>
-            </button>
-          </div>
-        </div>
+{/* Data Management Section */}
+<div className="card data-card">
+  <h2 className="card-title">Data Management</h2>
+  
+  <div className="data-actions">
+    <button 
+      className="btn btn-outline"
+      onClick={handleExportData}
+    >
+      <DownloadIcon />
+      <span>Export Data</span>
+    </button>
+    
+    <label className="btn btn-outline import-btn">
+      <UploadIcon />
+      <span>Import Data</span>
+      <input 
+        type="file" 
+        accept=".json"
+        onChange={handleImportData}
+        disabled={importing}
+        style={{ display: 'none' }}
+      />
+    </label>
+    
+    <button 
+      className="btn btn-outline"
+      onClick={handleSync}
+      disabled={syncStatus.syncing}
+    >
+      {syncStatus.syncing ? 'Syncing...' : 'Sync Now'}
+    </button>
+    
+    <button 
+      className="btn btn-danger"
+      onClick={handleClearOldRounds}
+    >
+      <DeleteIcon />
+      <span>Clear Old Rounds</span>
+    </button>
+  </div>
+  
+  {/* Sync Status Indicator */}
+  <div className="sync-status" style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div 
+      style={{ 
+        width: '10px', 
+        height: '10px', 
+        borderRadius: '50%', 
+        backgroundColor: syncStatus.syncing 
+          ? '#FFA000' // Yellow for syncing
+          : syncStatus.online 
+            ? '#388E3C' // Green for online
+            : '#D32F2F', // Red for offline
+        transition: 'background-color 0.3s'
+      }}
+    ></div>
+    <span style={{ fontSize: '0.9rem', color: '#757575' }}>
+      {syncStatus.syncing
+        ? 'Syncing...'
+        : syncStatus.online
+          ? syncStatus.lastSynced
+            ? `Last synced: ${new Date(syncStatus.lastSynced).toLocaleString()}`
+            : 'Connected, not synced yet'
+          : 'Offline'}
+    </span>
+  </div>
+</div>
       </div>
     </div>
   );
