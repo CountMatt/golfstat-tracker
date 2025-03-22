@@ -20,6 +20,7 @@ const Home = () => {
   useEffect(() => {
     // Load rounds from localStorage
     const storedRounds = getRounds();
+    console.log("Loaded rounds:", storedRounds); // Debug log
     setRounds(storedRounds);
     
     // Set the current round ID to the most recent round if any exist
@@ -35,18 +36,28 @@ const Home = () => {
   }, []);
 
   const handleStartNewRound = (holeCount) => {
-    // Create a new round
-    const newRound = createRound({
-      courseName: 'My Golf Course',
-      date: new Date().toISOString(),
-      holeCount: holeCount // Store whether it's 9 or 18 holes
-    });
+    console.log(`Starting new ${holeCount}-hole round`); // Debug log
     
-    // Update current round ID
-    setCurrentRoundId(newRound.id);
-    
-    // Navigate to track the round - starting with hole 1
-    navigate(`/track/${newRound.id}/1`);
+    try {
+      // Create a new round
+      const newRound = createRound({
+        courseName: 'My Golf Course',
+        date: new Date().toISOString(),
+        holeCount: holeCount
+      });
+      
+      console.log("New round created:", newRound); // Debug log
+      
+      // Update current round ID
+      setCurrentRoundId(newRound.id);
+      
+      // Navigate to track the round - starting with hole 1
+      console.log(`Navigating to /track/${newRound.id}/1`); // Debug log
+      navigate(`/track/${newRound.id}/1`);
+    } catch (error) {
+      console.error("Error creating round:", error);
+      alert("Error creating new round. Please check the console for details.");
+    }
   };
 
   const formatDate = (dateString) => {
